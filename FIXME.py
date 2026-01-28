@@ -1,13 +1,20 @@
+#Дан односвязный линейный список и указатель на голову списка P1. Необходимо вставить значение M перед каждым вторым
+# элементом списка, и вывести ссылку на последний элемент полученного списка P2.
+# При нечетном числе элементов исходного списка в конец списка вставлять не надо.
+
+# FIXME излишние комментарии
+# FIXME в названиие класса добавить Class
 class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
 
-
+# FIXME в названиие класса добавить Class
 class LinkedList:
     def __init__(self):
         self.head = None
-
+    
+    # FIXME отсутствует описание функции в docstring
     def append(self, data):
         new_node = Node(data)
         if not self.head:
@@ -19,26 +26,18 @@ class LinkedList:
             current = current.next
         current.next = new_node
 
+    # FIXME непонятное название переменной m
+    # FIXME отсутствует описание функции в docstring
+    # FIXME неоптимальная логика функции
     def paste(self, m):
-        # FIXME: По условию требуется вставлять M ПЕРЕД каждым вторым элементом,
-        # FIXME: а текущая реализация вставляет элементы после текущего узла.
-
-        # FIXME: Метод не возвращает P2 (ссылку на последний элемент списка),
-        # FIXME: хотя это явно требуется в условии задачи.
-
         if not self.head or not self.head.next:
-            # FIXME: Нет обработки требования:
-            # FIXME: при нечётном числе элементов вставку в конец делать нельзя.
             return
 
         current = self.head
         count = 1
-
-        while current.next:
-            # FIXME: Использование счётчика усложняет логику
-            # FIXME: и не гарантирует корректную вставку
-            # FIXME: именно перед вторыми элементами.
-            if count % 2 != 0:
+        
+        while current.next:  # Проверяем, что есть следующий узел
+            if count % 2 != 0:  # Пропускаем первый элемент, вставляем перед вторым
                 new_node = Node(m)
                 new_node.next = current.next
                 current.next = new_node
@@ -48,9 +47,8 @@ class LinkedList:
                 current = current.next
                 count += 1
 
+    # FIXME отсутствует описание функции в docstring
     def get_last_element(self):
-        # FIXME: Получение P2 вынесено в отдельный метод,
-        # FIXME: хотя по условию P2 должен быть результатом вставки.
         current = self.head
         if not current:
             return None
@@ -65,25 +63,28 @@ class LinkedList:
             current = current.next
         print()
 
-
+# FIXME отсутствует описание docstring
+# FIXME организация кода не стандартотизирована
 linked_list = LinkedList()
 
+# FIXME возможность ввести ненатуральное значение
 num_elements = int(input("Введите количество элементов для добавления в список: "))
 for i in range(num_elements):
-    data = input(f"Введите элемент {i + 1}: ")
+    data = input(f"Введите элемент {i+1}: ")
     linked_list.append(data)
 
-m = input("Введите значение M: ")
-linked_list.paste(m)
+# FIXME непонятное название переменной m
+m = input("Введите значение m для вставки: ")
+linked_list.paste(m)  # Выполняем вставку значений
 
 print("Измененный список:")
 linked_list.print_list()
 
+# Получаем указатель на последний элемент
 last_node = linked_list.get_last_element()
-# FIXME: P2 должен возвращаться методом paste(),
-# FIXME: а не вычисляться отдельным обходом списка.
 
+# FIXME ненужное действие по выводу значения элемента
 if last_node:
-    print(f"Последний элемент списка: {last_node.data}, ссылка: {last_node}")
+    print(f"Последний элемент списка имеет значение: {last_node.data}, Ссылка : {last_node}")
 else:
     print("Список пуст")
