@@ -12,7 +12,11 @@ class LinkedListClass:
 
     def append(self, data):
         # FIXTO добавлены комментарии для функций в формате docstring
-        """Добавляет узел с данными в конец списка."""
+        """
+        Добавляет узел с данными в конец списка.
+        arguments:
+        data - добавляемое значение
+        """
         new_node = NodeClass(data)
         if not self.head:
             self.head = new_node
@@ -27,9 +31,10 @@ class LinkedListClass:
     # FIXTO функция оптимизирована
     def paste(self, insert_element):
         # FIXTO добавлены комментарии для функций в формате docstring
-        """Вставляет новый узел с значением insert_element перед каждым вторым узлом.
+        """
+        Вставляет новый узел с значением insert_element перед каждым вторым узлом.
         arguments:
-        Insert_elements -
+        Insert_elements - вставляемое значение
         """
         if not self.head or not self.head.next:
             return
