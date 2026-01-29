@@ -40,16 +40,19 @@ class LinkedListClass:
             return
 
         current = self.head
-        """Пропускает первый элемент."""
-        count = 2
+        count = 1
 
         """Проверяет, что существует следующий узел."""
         while current.next:
-            new_node = NodeClass(insert_element)
-            new_node.next = current.next
-            current.next = new_node
-            current = new_node.next
-            count += 2           
+            if count % 2 != 0:  
+                new_node = NodeClass(insert_element)
+                new_node.next = current.next
+                current.next = new_node
+                current = new_node.next
+                count += 1 # FIXTO, исправлено
+            else:
+                current = current.next
+                count += 1    
 
     def get_last_element(self):
         # FIXTO добавлены комментарии для функций в формате docstring
@@ -81,10 +84,15 @@ def main():
     if(not str.isdigit(num_elements) or int(num_elements)<0):
         return(print("Ошибка ввода"))
     num_elements = int(num_elements)
+
+    # FIXTO добавлена проверка на корректный ввод 
     for i in range(num_elements):
         data = input(f"Введите элемент {i+1}: ")
+        if(not str.isdigit(data)):
+            return(print("Ошибка ввода"))
         linked_list.append(data)
 
+    # FIXTO добавлена проверка на корректный ввод
     insert_element = input("Введите значение для вставки: ")
     if(not str.isdigit(insert_element)):
         return(print("Ошибка ввода"))

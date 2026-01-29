@@ -28,7 +28,6 @@ class LinkedList:
 
     # FIXME непонятное название переменной m
     # FIXME отсутствует описание функции в docstring
-    # FIXME неоптимальная логика функции
     def paste(self, m):
         if not self.head or not self.head.next:
             return
@@ -42,7 +41,7 @@ class LinkedList:
                 new_node.next = current.next
                 current.next = new_node
                 current = new_node.next
-                count += 2
+                count += 2 # FIXME Счётчик двигается быстрее, чем курсор. Ломается логика программы
             else:
                 current = current.next
                 count += 1
@@ -73,6 +72,7 @@ for i in range(num_elements):
     data = input(f"Введите элемент {i+1}: ")
     linked_list.append(data)
 
+# FIXME возможность ввести ненатуральное значение
 # FIXME непонятное название переменной m
 m = input("Введите значение m для вставки: ")
 linked_list.paste(m)  # Выполняем вставку значений

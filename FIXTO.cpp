@@ -1,128 +1,170 @@
+/*
+Все динамические структуры данных реализовывать через классы. Не использовать STL.
+Для каждой динамической структуры должен быть предусмотрен
+стандартный набор методов — добавления / удаления / вывода элементов.
+Во всех задачах обязательно наличие дружественного интерфейса. Ввод данных с клавиатуры.
+
+Дан односвязный линейный список и указатель на голову списка P1.
+Необходимо вставить значение M перед каждым вторым элементом списка
+и вывести ссылку на последний элемент полученного списка P2.
+При нечётном числе элементов исходного списка в конец списка вставлять не надо.
+*/
+
 #include <iostream>
-using namespace std;
+#include <windows.h>
+// FIXTO: Использование using namespace std удалено.
+// FIXTO: Используется явное указание std::
 
+// FIXTO: Добавлен комментарий по назначению класса.
+// Класс, представляющий узел односвязного списка.
 class Node {
-public:
-    int data;
-    Node* next;
+ public:
+  // FIXTO: Поля данных скрыты (private) для соблюдения инкапсуляции.
+  // FIXTO: Имена полей имеют суффикс подчёркивания согласно Google Style Guide.
+  explicit Node(int value) : data_(value), next_(nullptr) {}
 
-    Node(int value) : data(value), next(nullptr) {}
+  int Data() const { return data_; }
+  Node* Next() const { return next_; }
+  void SetNext(Node* next) { next_ = next; }
+
+ private:
+  int data_;
+  Node* next_;
 };
 
+// FIXTO: Добавлен комментарий по назначению класса.
+// Класс для работы с односвязным линейным списком.
 class LinkedList {
-private:
-    Node* head;
+ public:
+  LinkedList() : head_(nullptr) {}
 
-public:
-    LinkedList() : head(nullptr) {}
+  // FIXTO: Запрещено копирование и присваивание,
+  // так как класс управляет динамической памятью.
+  LinkedList(const LinkedList&) = delete;
+  LinkedList& operator=(const LinkedList&) = delete;
 
-    void add(int value) {
-        Node* newNode = new Node(value);
-        if (head == nullptr) {
-            head = newNode;
-        } else {
-            Node* current = head;
-            while (current->next != nullptr) {
-                current = current->next;
-            }
-            current->next = newNode;
-        }
+  // FIXTO: Метод переименован согласно правилам именования Google Style Guide.
+  void Add(int value) {
+    Node* new_node = new Node(value);
+    if (head_ == nullptr) {
+      head_ = new_node;
+      return;
     }
 
-    // ИСПРАВЛЕННАЯ логика вставки
-    void insertBeforeEverySecond(int M) {
-        if (head == nullptr || head->next == nullptr) {
-            return;
-        }
-
-        Node* prev = head;
-        Node* current = head->next;  // 2-й элемент исходного списка
-        int index = 2;
-
-        while (current != nullptr) {
-            if (index % 2 == 0) {
-                Node* newNode = new Node(M);
-                prev->next = newNode;
-                newNode->next = current;
-
-                prev = current;
-                current = current->next;
-                index++;
-            } else {
-                prev = current;
-                current = current->next;
-                index++;
-            }
-        }
+    Node* current = head_;
+    while (current->Next() != nullptr) {
+      current = current->Next();
     }
+    current->SetNext(new_node);
+  }
 
-    void print() {
-        Node* current = head;
-        while (current != nullptr) {
-            cout << current->data << " ";
-            current = current->next;
-        }
-        cout << endl;
+  // FIXTO: Метод переименован.
+  // FIXTO: Параметр M переименован в insert_element для ясности.
+  // Вставляет значение insert_element перед каждым вторым элементом списка.
+  void InsertBeforeEverySecond(int insert_element) {
+    Node* current = head_;
+
+    // Счётчик позиции: первый элемент имеет индекс 1.
+    int count = 1;
+
+    while (current != nullptr && current->Next() != nullptr) {
+      if (count % 2 == 1) {
+        Node* new_node = new Node(insert_element);
+        new_node->SetNext(current->Next());
+        current->SetNext(new_node);
+        current = new_node->Next();
+      } else {
+        current = current->Next();
+      }
+      count++;
     }
+  }
 
-    Node* getLastNode() {
-        Node* current = head;
-        while (current != nullptr && current->next != nullptr) {
-            current = current->next;
-        }
-        return current;
+  // FIXTO: Метод переименован.
+  // Выводит элементы списка на экран.
+  void Print() const {
+    Node* current = head_;
+    while (current != nullptr) {
+      std::cout << current->Data() << " ";
+      current = current->Next();
     }
+    std::cout << std::endl;
+  }
 
-    void clearList() {
-        while (head != nullptr) {
-            Node* temp = head;
-            head = head->next;
-            delete temp;
-        }
-        cout << "Список очищен." << endl;
+  // FIXTO: Комментарий перенесён перед объявлением метода.
+  // Возвращает указатель на последний элемент списка.
+  Node* Last() const {
+    Node* current = head_;
+    while (current != nullptr && current->Next() != nullptr) {
+      current = current->Next();
     }
+    return current;
+  }
 
-    friend void insertBeforeEverySecond(LinkedList& list, int M);
+  // FIXTO: Метод управления памятью не выполняет ввод/вывод.
+  void Clear() {
+    while (head_ != nullptr) {
+      Node* temp = head_;
+      head_ = head_->Next();
+      delete temp;
+    }
+  }
+
+ private:
+  // FIXTO: Имя поля оканчивается подчёркиванием.
+  Node* head_;
 };
-
-void insertBeforeEverySecond(LinkedList& list, int M) {
-    list.insertBeforeEverySecond(M);
-}
 
 int main() {
-    LinkedList list;
-    int n, value, M;
+  // FIXTO: Выбрана верная кодировка.
+  SetConsoleOutputCP(CP_UTF8);
+  SetConsoleCP(CP_UTF8);
+  LinkedList list;  
+  // FIXTO: Переменные переименованы для ясности.
+  int element_count = 0;
+  int value = 0;
+  int insert_value = 0;
 
-    cout << "Введите количество элементов в списке: ";
-    cin >> n;
+  // FIXTO: Добавлена проверка корректности ввода.
+  std::cout << "Введите количество элементов списка: ";
+  if (!(std::cin >> element_count) || element_count < 0) {
+    std::cout << "Некорректный ввод." << std::endl;
+    return 1;
+  }
 
-    cout << "Введите элементы списка: ";
-    for (int i = 0; i < n; ++i) {
-        cin >> value;
-        list.add(value);
+  // FIXTO: Добавлена проверка корректности ввода.
+  for (int i = 0; i < element_count; ++i) {
+    std::cout << "Введите элементы списка номер "<< i+1 <<": ";
+    if (!(std::cin >> value)){
+      std::cout << "Некорректный ввод." << std::endl;
+      return 1;
     }
+    list.Add(value);
+  }
 
-    cout << "Введите значение M для вставки: ";
-    cin >> M;
+  // FIXTO: Добавлена проверка корректности ввода.
+  std::cout << "Введите значение для вставки: ";
+  if (!(std::cin >> insert_value)) {
+    std::cout << "Некорректный ввод." << std::endl;
+    return 1;
+  }
 
-    insertBeforeEverySecond(list, M);
+  list.InsertBeforeEverySecond(insert_value);
 
-    cout << "Список после вставки: ";
-    list.print();
+  std::cout << "Список после вставки: ";
+  list.Print();
 
-    Node* lastNode = list.getLastNode();
+  Node* last_node = list.Last();
 
-    if (lastNode != nullptr) {
-        cout << "Указатель на последний элемент списка: " << lastNode << endl;
-        cout << "Значение последнего элемента: " << lastNode->data << endl;
-    } else {
-        cout << "Список пуст." << endl;
-    }
+  // FIXTO: Убрано отображение значения последнего элемента.
+  if (last_node != nullptr) {
+    std::cout << "Указатель на последний элемент списка: "
+              << last_node << std::endl;
+  } else {
+    std::cout << "Список пуст." << std::endl;
+  }
 
-    list.clearList();
-
-    cout << "Проверка списка после очистки: ";
-    list.print();
-
-    return 0;
+  // FIXTO: Убрано оповещение об очиске списка.
+  list.Clear();
+  return 0;
 }
